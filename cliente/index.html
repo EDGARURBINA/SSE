@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones Mensajes y Alertas</title>
+    <style>
+        #notificaciones, #mensajes ,#alertas {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .notificacion, .mensaje, .alerta {
+            padding: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notificaciones Nuevas</h1>
+    <div id="notificaciones"></div>
+
+    <h1>Mensajes Nuevos</h1>
+    <div id="mensajes"></div>
+
+    <h1>Alertas nuevas</h1>
+    <div id="alertas"></div>
+
+    <script>
+        const eventosSource = new EventSource('http://localhost:3000/eventos');
+
+        eventosSource.addEventListener('notificacion', function(event) {
+            const notificacionesDiv = document.getElementById('notificaciones');
+            const newNotificacion = document.createElement('div');
+            newNotificacion.className = 'notificacion';
+            newNotificacion.textContent = event.data;
+            notificacionesDiv.appendChild(newNotificacion);
+            console.log('Notificación:', event.data);
+        }); 
+
+        eventosSource.addEventListener('mensaje', function(event) {
+            const mensajesDiv = document.getElementById('mensajes');
+            const newMensaje = document.createElement('div');
+            newMensaje.className = 'mensaje';
+            newMensaje.textContent = event.data;
+            mensajesDiv.appendChild(newMensaje);
+            console.log('Mensaje:', event.data);
+        });
+
+        eventosSource.addEventListener("alerta", function(event){
+            const alertas = document.getElementById("alertas");
+            const newAlerta = document.createElement("div");
+            newAlerta.className = "alerta";
+            newAlerta.textContent = event.data;
+            alertas.appendChild(newAlerta);
+            console.log("Alerta:", event.data)
+        })
+
+        eventosSource.onerror = function(err) {
+            console.error('EventSource failed:', err);
+        };
+    </script>
+</body>
+</html>
